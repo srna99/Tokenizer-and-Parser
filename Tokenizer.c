@@ -7,6 +7,7 @@
 
 _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 	char input[MY_CHAR_MAX];
+	int count = 0;
 
 	while (fgets(input, MY_CHAR_MAX, inf) != NULL){
 		char str[LEXEME_MAX];
@@ -15,12 +16,11 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 
 		for (int i = 0; i < strlen(input); i++){
 			str[strInd] = input[i];
-			printf("%d, %lu ", i, strlen(input));
 			printf("%s", str);
 			int type = checkToken(str);
 
 			if (type == WHILE_KEYWORD || type == RETURN_KEYWORD){
-				printf(" 1\n");
+				printf(" 1");
 
 				struct lexics lex;
 				strcpy(lex.lexeme, str);
@@ -28,35 +28,42 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 
 				aLex[lexInd] = lex;
 				lexInd++;
+				count++;
 
-				str[0] = NULL;
+				str[0] = '$';
+				strcpy(str, reformatString(str));
 				strInd = 0;
 			} else if (type == VARTYPE){
-				printf(" 2\n");
+				printf(" 2");
 
 				struct lexics lex;
 				strcpy(lex.lexeme, str);
 				lex.token = type;
+				printf(" %d", type);
 
 				aLex[lexInd] = lex;
 				lexInd++;
+				count++;
 
-				str[0] = NULL;
+				str[0] = '$';
+				strcpy(str, reformatString(str));
 				strInd = 0;
 			} else if (str[strInd] == ' '){
 				printf(" 3");
 				if (strlen(str) > 1){
-					str[strInd] = NULL;
+					str[strInd] = '$';
+					strcpy(str, reformatString(str));
 
 					struct lexics lex;
 					strcpy(lex.lexeme, str);
-					printf(" %s\n", str);
 					lex.token = type;
 
 					aLex[lexInd] = lex;
 					lexInd++;
+					count++;
 
-					str[0] = NULL;
+					str[0] = '$';
+					strcpy(str, reformatString(str));
 					strInd = 0;
 				} else {
 					str[0] = 0;
@@ -74,12 +81,19 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 
 					aLex[lexInd] = lex;
 					lexInd++;
+					count++;
 
-					str[0] = NULL;
+					str[0] = '$';
+					strcpy(str, reformatString(str));
 					strInd = 0;
 				} else {
-					char symbol = str[strInd];
-					str[strInd] = NULL;
+					struct lexics lex2;
+					strcpy(lex2.lexeme, &str[strInd]);
+					lex2.token = checkToken(&str[strInd]);
+					printf(" #%s, %s# %d", lex2.lexeme, &str[strInd], lex2.token);
+
+					str[strInd] = '$';
+					strcpy(str, reformatString(str));
 
 					struct lexics lex1;
 					strcpy(lex1.lexeme, str);
@@ -88,16 +102,14 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 
 					aLex[lexInd] = lex1;
 					lexInd++;
-
-					struct lexics lex2;
-					strcpy(lex2.lexeme, &symbol);
-					lex2.token = checkToken(&symbol);
-					printf(" %d\n", lex2.token);
+					count++;
 
 					aLex[lexInd] = lex2;
 					lexInd++;
+					count++;
 
-					str[0] = NULL;
+					str[0] = '$';
+					strcpy(str, reformatString(str));
 					strInd = 0;
 				}
 			} else if (type == IDENTIFIER || type == NUMBER){
@@ -108,6 +120,8 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 	}
 
 	fclose(inf);
+
+	*numLex = count;
 
 	if (TRUE){
 		return TRUE;
@@ -144,6 +158,21 @@ int checkToken(char *str){
 		return IDENTIFIER;
 	}
 	return NUMBER;
+}
+
+char * reformatString(char *str){
+	char reStr[LEXEME_MAX] = "$";
+//	printf(" %lu %s", strlen(str), str);
+	for(int i = 0; i < strlen(str); i++) {
+//		printf(" hi");
+		if (str[i] != '$'){
+	     	 reStr[i] = str[i];
+		} else {
+			break;
+		}
+	}
+	printf(" !%s!\n", reStr);
+	return reStr;
 }
 
 
