@@ -4,7 +4,7 @@
 
 #include "Parser.h"
 
-int token = 0;
+int token = 0; //current token
 int valid = TRUE;
 int ind = 0;
 struct lexics *lexicsArr;
@@ -12,6 +12,7 @@ struct lexics *lexicsArr;
 _Bool parser(struct lexics *someLexics, int numberOfLexics){
 	lexicsArr = someLexics;
 	getNextToken();
+	//begin parsing using EBNF grammar provided and most of funcs are self-explanatory
 	function();
 	return valid;
 }
@@ -117,14 +118,18 @@ void term(){
 	}
 }
 
+//see if current token matches the expected token
 void match(int inputTok){
+	//if they match, update to next token
 	if (token == inputTok){
 		getNextToken();
 	} else {
+		//if not matched, EBNF violated
 		valid = FALSE;
 	}
 }
 
+//get next token
 void getNextToken(){
 	token = lexicsArr[ind].token;
 	ind++;
