@@ -9,6 +9,7 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 	char input[MY_CHAR_MAX];
 	int count = 0;
 	int lexInd = 0;
+	int success = FALSE;
 
 	while (fgets(input, MY_CHAR_MAX, inf) != NULL){
 		char str[LEXEME_MAX];
@@ -168,17 +169,14 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
 
 			str[strInd+1] = '\0';
 		}
+		success = TRUE;
 	}
 
 	fclose(inf);
 
 	*numLex = count;
 
-	if (TRUE){
-		return TRUE;
-	}
-
-	return FALSE;
+	return success;
 }
 
 int checkToken(char *str){
@@ -224,14 +222,3 @@ char * reformatString(char *str){
 	printf(" !%s!", reStr);
 	return reStr;
 }
-
-
-
-
-
-
-
-
-
-
-
