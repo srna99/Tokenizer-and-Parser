@@ -28,14 +28,8 @@ struct lexics{
 	int token;
 	char lexeme[LEXEME_MAX];
 };
-/*Spring 2019 Legecy pls remove 
-_Bool vaildNumber(char* aLexeme);
-*/
 
 _Bool validNumber(char* aLexeme);
 _Bool validIdentifier(char * aLexeme);
-
-//Stuck on file I/O? Research fgets! 
-//fgets(input, MY_CHAR_MAX, inf) != NULL
 
 #endif
