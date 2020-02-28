@@ -18,11 +18,13 @@ _Bool parser(struct lexics *someLexics, int numberOfLexics){
 }
 
 void function(){
+	printf("1\n");
 	header();
 	body();
 }
 
 void header(){
+	printf("2\n");
 	match(VARTYPE);
 	match(IDENTIFIER);
 	match(LEFT_PARENTHESIS);
@@ -35,16 +37,19 @@ void header(){
 }
 
 void argDecl(){
+	printf("3\n");
 	match(VARTYPE);
 	match(IDENTIFIER);
 
 	while (token == COMMA){
+		match(COMMA);
 		match(VARTYPE);
 		match(IDENTIFIER);
 	}
 }
 
 void body(){
+	printf("4\n");
 	match(LEFT_BRACKET);
 
 	if (token != RIGHT_BRACKET){
@@ -55,6 +60,7 @@ void body(){
 }
 
 void statementList(){
+	printf("5\n");
 	statement();
 
 	while (token == WHILE_KEYWORD || token == RETURN_KEYWORD || token == IDENTIFIER || token == LEFT_BRACKET){
@@ -63,6 +69,7 @@ void statementList(){
 }
 
 void statement(){
+	printf("6\n");
 	if (token == WHILE_KEYWORD){
 		whileLoop();
 	} else if (token == RETURN_KEYWORD){
@@ -75,6 +82,7 @@ void statement(){
 }
 
 void whileLoop(){
+	printf("7\n");
 	match(WHILE_KEYWORD);
 	match(LEFT_PARENTHESIS);
 	expression();
@@ -83,12 +91,14 @@ void whileLoop(){
 }
 
 void returnStmt(){
+	printf("8\n");
 	match(RETURN_KEYWORD);
 	expression();
 	match(EOL);
 }
 
 void assignment(){
+	printf("9\n");
 	match(IDENTIFIER);
 	match(EQUAL);
 	expression();
@@ -96,6 +106,7 @@ void assignment(){
 }
 
 void expression(){
+	printf("10\n");
 	if (token != LEFT_PARENTHESIS){
 		term();
 
@@ -111,6 +122,7 @@ void expression(){
 }
 
 void term(){
+	printf("11\n");
 	if (token == IDENTIFIER){
 		match(IDENTIFIER);
 	} else {
@@ -125,6 +137,7 @@ void match(int inputTok){
 		getNextToken();
 	} else {
 		//if not matched, EBNF violated
+		printf("%d, but expected %d for %s\n", token, inputTok, lexicsArr[ind].lexeme);
 		valid = FALSE;
 	}
 }
@@ -134,3 +147,4 @@ void getNextToken(){
 	token = lexicsArr[ind].token;
 	ind++;
 }
+

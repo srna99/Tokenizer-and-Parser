@@ -10,6 +10,7 @@
 
 _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf);
 int checkToken(char *str);
-char * reformatString(char *str);
+void reformatString(char *str);
 
 #endif /* TOKENIZER_H_ */
+
